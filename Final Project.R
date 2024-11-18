@@ -1,3 +1,5 @@
+#########Code from here on is to load in the dataset and bind the correct dataframes together ########
+
 setwd("C:/New Data/Data")
 library(httr)
 directory <- paste0(getwd(),"/NFLBDB2025")
@@ -47,6 +49,17 @@ all_motion_df <- all_motion_df %>% distinct() %>% data.frame()
 df1 %>% 
   select(gameId,playId) %>%
   distinct()
+
+########Beginning of Data Analysis #######
+
+dfa <- df %>%
+  select(gameId, playId, nflId, preSnapHomeTeamWinProbability,
+          preSnapVisitorTeamWinProbability, preSnapVisitorScore, preSnapHomeScore,
+          yardlineNumber, yardsGained, passResult,
+          pff_runConceptPrimary, pff_runConceptSecondary, pff_manZone,
+          pff_passCoverage, offenseFormation, receiverAlignment,
+         ) %>%
+  distinct(gameId, playId, .keep_all = TRUE)
 
 
 
