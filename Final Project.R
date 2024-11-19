@@ -63,5 +63,25 @@ dfa <- df %>%
 
 
 
-
+M1 <- df %>%
+  # Create a flag indicating if motion is present in a play
+  mutate(MotionPresent = ifelse(inMotionAtBallSnap == TRUE, TRUE, FALSE)) %>%
+  # Arrange data so that rows with motion are prioritized
+  arrange(gameId, playId, desc(MotionPresent)) %>%
+  # Select distinct gameId and playId, keeping rows with motion when available
+  distinct(gameId, playId, .keep_all = TRUE) %>% 
+  # Create Outcome and Motion columns
+  mutate(Outcome = ifelse(yardsGained > 0, 'T', 'F'),
+         Motion = ifelse(MotionPresent, "T", "F")) %>%
+  # Ensure Outcome and Motion are not NA
+  filter(!is.na(Outcome) & !is.na(Motion)) %>%
+  # Group by Motion and Outcome
+  group_by(Motion, Outcome) %>%
+  # Summarize count and calculate percentages within each Motion group
+  summarise(n = n(), .groups = 'drop') %>% 
+  group_by(Motion) %>% 
+  mutate(percentage = (n / sum(n)) * 100) %>% 
+  # Convert to data.frame and print
+  data.frame() %>%
+  print()
 
